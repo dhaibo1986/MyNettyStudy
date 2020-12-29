@@ -19,8 +19,7 @@ public class Client {
 					//通过NioSocketChannel 指定NIO的方式进行连接
 					.channel(NioSocketChannel.class)
 					.handler(new ClientChannelInitializer())
-					.connect("localhost", 8888)
-					.sync();
+					.connect("localhost", 8888);
 			f.addListener(new ChannelFutureListener() {
 				@Override
 				public void operationComplete(ChannelFuture future) throws Exception {
@@ -32,6 +31,7 @@ public class Client {
 					}
 				}
 			});
+			f.sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
