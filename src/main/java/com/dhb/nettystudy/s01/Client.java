@@ -14,13 +14,9 @@ public class Client {
 		Bootstrap b = new Bootstrap();
 		try {
 			b.group(group)
+					//通过NioSocketChannel 指定NIO的方式进行连接
 					.channel(NioSocketChannel.class)
-					.handler(new ChannelInitializer<SocketChannel>() {
-						@Override
-						protected void initChannel(SocketChannel ch) throws Exception {
-
-						}
-					})
+					.handler(new ClientChannelInitializer())
 					.connect("localhost", 8888)
 					.sync();
 		} catch (InterruptedException e) {
@@ -28,5 +24,12 @@ public class Client {
 		} finally {
 			group.shutdownGracefully();
 		}
+	}
+}
+
+class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
+	@Override
+	protected void initChannel(SocketChannel ch) throws Exception {
+		System.out.println(ch);
 	}
 }
