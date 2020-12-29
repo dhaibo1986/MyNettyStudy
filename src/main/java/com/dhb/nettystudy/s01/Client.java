@@ -1,6 +1,8 @@
 package com.dhb.nettystudy.s01;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -13,12 +15,23 @@ public class Client {
 		EventLoopGroup group = new NioEventLoopGroup(1);
 		Bootstrap b = new Bootstrap();
 		try {
-			b.group(group)
+			ChannelFuture f = b.group(group)
 					//通过NioSocketChannel 指定NIO的方式进行连接
 					.channel(NioSocketChannel.class)
 					.handler(new ClientChannelInitializer())
 					.connect("localhost", 8888)
 					.sync();
+			f.addListener(new ChannelFutureListener() {
+				@Override
+				public void operationComplete(ChannelFuture future) throws Exception {
+					System.out.println("调用operationComplete");
+					if(!future.isSuccess()) {
+						System.out.println("not connent!");
+					}else {
+						System.out.println("success!");
+					}
+				}
+			});
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
