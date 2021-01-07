@@ -23,15 +23,14 @@ public class Client {
 			f.addListener(new ChannelFutureListener() {
 				@Override
 				public void operationComplete(ChannelFuture future) throws Exception {
-					System.out.println("调用operationComplete");
-					if(!future.isSuccess()) {
+					if (!future.isSuccess()) {
 						System.out.println("not connent!");
-					}else {
+					} else {
 						System.out.println("success!");
 					}
 				}
 			});
-			f.sync();
+			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
@@ -49,20 +48,18 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
 
 }
 
-class ClientHandler extends ChannelInboundHandlerAdapter{
+class ClientHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		ByteBuf buf = null;
-		if(msg instanceof ByteBuf) {
-			try {
-				buf = (ByteBuf) msg;
-				byte[] bytes = new byte[buf.readableBytes()];
-				buf.getBytes(buf.readerIndex(), bytes);
-				System.out.println(new String(bytes));
-			} finally {
-				if (buf != null) {
-					ReferenceCountUtil.release(buf);
-				}
+		try {
+			buf = (ByteBuf) msg;
+			byte[] bytes = new byte[buf.readableBytes()];
+			buf.getBytes(buf.readerIndex(), bytes);
+			System.out.println(new String(bytes));
+		} finally {
+			if (buf != null) {
+				ReferenceCountUtil.release(buf);
 			}
 		}
 	}
@@ -70,7 +67,6 @@ class ClientHandler extends ChannelInboundHandlerAdapter{
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		//channel第一次连接上之后写出一个字符
-		System.out.println("write hello *****************");
 		ByteBuf buf = Unpooled.copiedBuffer("hello".getBytes());
 		ctx.writeAndFlush(buf);
 	}
