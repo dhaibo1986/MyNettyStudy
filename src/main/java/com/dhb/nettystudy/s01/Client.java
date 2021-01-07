@@ -7,6 +7,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.ReferenceCountUtil;
 
 public class Client {
 
@@ -51,7 +52,19 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
 class ClientHandler extends ChannelInboundHandlerAdapter{
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-
+		ByteBuf buf = null;
+		if(msg instanceof ByteBuf) {
+			try {
+				buf = (ByteBuf) msg;
+				byte[] bytes = new byte[buf.readableBytes()];
+				buf.getBytes(buf.readerIndex(), bytes);
+				System.out.println(new String(bytes));
+			} finally {
+				if (buf != null) {
+					ReferenceCountUtil.release(buf);
+				}
+			}
+		}
 	}
 
 	@Override

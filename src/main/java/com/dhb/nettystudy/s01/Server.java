@@ -45,15 +45,21 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 		ByteBuf buf = null;
-		try {
-			buf = (ByteBuf)msg;
-			System.out.println("==============================");
-			System.out.println(buf.refCnt());
-			System.out.println(buf.toString());
-		} finally {
-			if(buf != null) {
+		if(msg instanceof ByteBuf) {
+			try {
+				buf = (ByteBuf) msg;
+				System.out.println("==============================");
+				byte[] bytes = new byte[buf.readableBytes()];
+				buf.getBytes(buf.readerIndex(), bytes);
+				System.out.println(new String(bytes));
+				ctx.writeAndFlush(bytes);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (buf != null && buf.refCnt() != 0) {
 				ReferenceCountUtil.release(buf);
 				System.out.println(buf.refCnt());
+				}
 			}
 		}
 	}
