@@ -71,11 +71,6 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
 				Server.clients.writeAndFlush(msg);
 			} catch (Exception e) {
 				e.printStackTrace();
-			} finally {
-				if (buf != null && buf.refCnt() != 0) {
-				ReferenceCountUtil.release(buf);
-				System.out.println(buf.refCnt());
-				}
 			}
 		}
 	}
