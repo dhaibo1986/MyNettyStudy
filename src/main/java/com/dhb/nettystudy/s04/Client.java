@@ -1,4 +1,4 @@
-package com.dhb.nettystudy.s02;
+package com.dhb.nettystudy.s04;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
@@ -9,7 +9,10 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.ReferenceCountUtil;
 
-public class Client {
+
+public  class Client {
+
+	private Channel channel = null;
 
 	public static void main(String[] args) {
 		Client c = new Client();
@@ -58,6 +61,7 @@ public class Client {
 						System.out.println("not connect!");
 					} else {
 						System.out.println("connected!");
+						channel = future.channel();
 					}
 				}
 			});
@@ -72,3 +76,4 @@ public class Client {
 	}
 
 }
+
