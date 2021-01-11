@@ -17,8 +17,7 @@ public class Client {
 	private Client c = null;
 
 	public static void main(String[] args) {
-		Client c = new Client();
-		c.connect();
+		ClientFrame.start();
 	}
 
 	public void connect() {

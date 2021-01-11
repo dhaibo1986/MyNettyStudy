@@ -41,10 +41,14 @@ public class ClientFrame  extends Frame {
 		client.connect();
 	}
 
-	public static void main(String[] args) {
+	public static void start() {
 		ClientFrame frame = ClientFrame.INSTANCE;
 		frame.setVisible(true);
 		frame.connectToServer();
+	}
+
+	public static void main(String[] args) {
+		ClientFrame.start();
 	}
 
 }
