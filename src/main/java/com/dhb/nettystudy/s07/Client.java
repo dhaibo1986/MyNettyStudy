@@ -16,12 +16,14 @@ public class Client {
 
 	private Client c = null;
 
+	private EventLoopGroup group;
+
 	public static void main(String[] args) {
 		ClientFrame.start();
 	}
 
 	public void connect() {
-		EventLoopGroup group = new NioEventLoopGroup(1);
+		group = new NioEventLoopGroup(1);
 		Bootstrap b = new Bootstrap();
 
 		try {
@@ -75,6 +77,12 @@ public class Client {
 		} finally {
 			group.shutdownGracefully();
 		}
+	}
+
+	public void stop() {
+		this.channel.flush();
+		this.channel.closeFuture();
+		this.group.shutdownGracefully();
 	}
 
 	public void send(String msg) {
