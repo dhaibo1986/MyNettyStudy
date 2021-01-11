@@ -14,10 +14,32 @@ public class Server {
 
 	public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-	public static void main(String[] args) {
-		EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-		EventLoopGroup workerGroup = new NioEventLoopGroup(2);
+	private EventLoopGroup bossGroup;
+	private EventLoopGroup workerGroup;
 
+	public static void main(String[] args) {
+
+
+	}
+
+	public void serverStop() {
+		for(Channel c :clients) {
+			if(c.isActive()) {
+				c.flush();
+				c.close();
+			}
+		}
+		if(null != workerGroup) {
+			workerGroup.shutdownGracefully();
+		}
+		if(null != bossGroup) {
+			bossGroup.shutdownGracefully();
+		}
+	}
+
+	public void serverStart() {
+		bossGroup = new NioEventLoopGroup(1);
+		workerGroup = new NioEventLoopGroup(2);
 		ServerBootstrap b = new ServerBootstrap();
 		try {
 			ChannelFuture f = b.group(bossGroup,workerGroup)
@@ -40,7 +62,6 @@ public class Server {
 			workerGroup.shutdownGracefully();
 			bossGroup.shutdownGracefully();
 		}
-
 	}
 }
 
