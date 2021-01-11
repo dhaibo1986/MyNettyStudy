@@ -53,6 +53,11 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
 	}
 
 	@Override
+	public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+		System.out.println("channel ["+ctx.name()+"] 连接关闭，被移除。");
+	}
+
+	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		cause.printStackTrace();
 		ctx.close();
