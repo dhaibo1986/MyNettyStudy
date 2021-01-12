@@ -60,4 +60,8 @@ public class ServerFrame extends Frame {
 	public void updateServerMsg(String msg) {
 		this.taLeft.setText(taLeft.getText()+LINE_SEP+msg);
 	}
+
+	public void updateClientMsg(String msg) {
+		this.taRight.setText(taLeft.getText()+LINE_SEP+msg);
+	}
 }
